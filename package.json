@@ -1,0 +1,23 @@
+{
+  "name": "covid-19-web-scrap",
+  "version": "1.0.0",
+  "description": "JavaScript application which scraps common covid-19 related data form https://korona.gov.s",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web scraping",
+    "JavaScript",
+    "MongoDB"
+  ],
+  "author": "Cyril Gavala",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^3.6.3",
+    "node-cron": "^2.0.3",
+    "node-fetch": "^2.6.1",
+    "node-scrapy": "^0.5.0"
+  }
+}
