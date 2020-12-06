@@ -21,27 +21,31 @@ fetch(url).then((res) => res.text()).catch(console.error)
         console.log("Data extracted")
     }).catch(console.error)
 
-const clientResolved = Promise.resolve(MongoClient.connect(uri, {useUnifiedTopology: true})
-    .catch(err => console.error("Database unreachable:", err.name)));
-if (clientResolved === undefined) return false;
-const collection = clientResolved.db("covid-data").collection("daily-data");
-let now = new Date();
-now.setUTCHours(0, 0, 0, 0);
-const dailyDataResolved = Promise.resolve(collection.findOne({"date": now}, {}));
-if (dailyDataResolved === null) {
-    let confirmed = parseInt(data[1].number.replace(/\s/g, "")),
-        recovered = parseInt(data[6].number.replace(/\s/g, "")),
-        deaths = parseInt(data[7].number.replace(/\s/g, ""));
-    let active = confirmed - recovered - deaths;
-    collection.insertOne({
-        numberOfTests: parseInt(data[0].number.replace(/\s/g, "")),
-        confirmed: confirmed,
-        active: active,
-        recovered: recovered,
-        deaths: deaths,
-        date: now
-    }).catch(err => console.error("Entry was not saved", err));
-    console.log("Data saved to database");
-}
-clientResolved.close();
-console.log("Process finished");
+MongoClient.connect(uri, {useUnifiedTopology: true})
+    .then(client => {
+        const collection = client.db("covid-data").collection("daily-data");
+        let now = new Date();
+        now.setUTCHours(0, 0, 0, 0);
+        collection.findOne({"date": now}, {})
+            .then(dailyData => {
+                if (dailyData === null) {
+                    let confirmed = parseInt(data[1].number.replace(/\s/g, "")),
+                        recovered = parseInt(data[6].number.replace(/\s/g, "")),
+                        deaths = parseInt(data[7].number.replace(/\s/g, "")),
+                        active = confirmed - recovered - deaths;
+                    collection.insertOne({
+                        numberOfTests: parseInt(data[0].number.replace(/\s/g, "")),
+                        confirmed: confirmed,
+                        active: active,
+                        recovered: recovered,
+                        deaths: deaths,
+                        date: now
+                    }).then(() => {
+                        console.log("Data saved to database");
+                        client.close().then(r => console.log("Process finished", r)).catch(console.error);
+                    }).catch(err => console.error("Entry was not saved", err));
+                } else {
+                    client.close().then(() => console.log("Process finished")).catch(console.error);
+                }
+            }).catch(console.error)
+    }).catch(err => console.error("Database unreachable:", err.name))
