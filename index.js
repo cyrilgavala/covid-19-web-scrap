@@ -5,7 +5,7 @@ const cron = require('node-cron');
 const uri = process.env.DB_URL;
 let data = [];
 
-cron.schedule('0 12 * * *', async function() {
+cron.schedule('0 13 * * *', async function() {
     console.log("Process started")
     const url = 'https://korona.gov.sk/koronavirus-na-slovensku-v-cislach/';
     const model = {
