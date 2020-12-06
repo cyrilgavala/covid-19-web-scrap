@@ -27,7 +27,7 @@ if (clientResolved === undefined) return false;
 const collection = clientResolved.db("covid-data").collection("daily-data");
 let now = new Date();
 now.setUTCHours(0, 0, 0, 0);
-const dailyDataResolved = await Promise.resolve(collection.findOne({"date": now}, {}));
+const dailyDataResolved = Promise.resolve(collection.findOne({"date": now}, {}));
 if (dailyDataResolved === null) {
     let confirmed = parseInt(data[1].number.replace(/\s/g, "")),
         recovered = parseInt(data[6].number.replace(/\s/g, "")),
