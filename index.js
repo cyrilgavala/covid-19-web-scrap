@@ -10,8 +10,7 @@ const model = {
     infos: [
         '.app-pane-gray',
         {
-            number: 'h2, h3',
-            label: 'p',
+            data: 'p',
         },
     ]
 };
@@ -24,13 +23,11 @@ fetch(url).then((res) => res.text()).catch(console.error)
                 const collection = client.db("covid-data").collection("daily-data");
                 let now = new Date();
                 now.setUTCHours(0, 0, 0, 0);
-                let confirmed = parseInt(data[1].number.replace(/\s/g, "")),
-                    deaths = parseInt(data[6].number.replace(/\s/g, ""));
                 collection.findOneAndUpdate({"date": now}, {
                     $set: {
-                        "numberOfTests": parseInt(data[0].number.replace(/\s/g, "")),
-                        "confirmed": confirmed,
-                        "deaths": deaths,
+                        "numberOfTests": parseInt(data[0].data.substring(data[0].data.indexOf(": ") + 2).replace(/\s/g, "")),
+                        "confirmed": parseInt(data[1].data.substring(data[1].data.indexOf(": ") + 2).replace(/\s/g, "")),
+                        "deaths": parseInt(data[6].data.substring(data[6].data.indexOf(": ") + 2).replace(/\s/g, "")),
                         "date": now
                     }
                 }, {upsert: true}).then(() => {
