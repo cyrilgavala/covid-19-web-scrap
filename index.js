@@ -27,7 +27,7 @@ fetch(url).then((res) => res.text()).catch(console.error)
                     $set: {
                         "numberOfTests": parseInt(data[0].data.substring(data[0].data.indexOf(": ") + 2).replace(/\s/g, "")),
                         "confirmed": parseInt(data[1].data.substring(data[1].data.indexOf(": ") + 2).replace(/\s/g, "")),
-                        "deaths": parseInt(data[6].data.substring(data[6].data.indexOf(": ") + 2).replace(/\s/g, "")),
+                        "deaths": parseInt(data[15].data.substring(data[6].data.indexOf(": ") + 2).replace(/\s/g, "")),
                         "date": now
                     }
                 }, {upsert: true}).then(() => {
