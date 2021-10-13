@@ -10,7 +10,7 @@ const model = {
     infos: [
         '.app-pane-gray',
         {
-            data: 'p',
+            data: '.govuk-body',
         },
     ]
 };
@@ -21,13 +21,16 @@ fetch(url).then((res) => res.text()).catch(console.error)
         MongoClient.connect(uri, {useUnifiedTopology: true})
             .then(client => {
                 const collection = client.db("covid-data").collection("daily-data");
-                let now = new Date();
+                const now = new Date();
+                const numOfTests = parseInt(data[0].data.substring(data[0].data.indexOf(":") + 2).replace(/\s/g, ""))
+                const confirmed = parseInt(data[1].data.substring(data[1].data.indexOf(":") + 2).replace(/\s/g, ""))
+                const deaths = parseInt(data[15].data.substring(data[15].data.indexOf(":") + 2).replace(/\s/g, ""))
                 now.setUTCHours(0, 0, 0, 0);
                 collection.findOneAndUpdate({"date": now}, {
                     $set: {
-                        "numberOfTests": parseInt(data[0].data.substring(data[0].data.indexOf(": ") + 2).replace(/\s/g, "")),
-                        "confirmed": parseInt(data[1].data.substring(data[1].data.indexOf(": ") + 2).replace(/\s/g, "")),
-                        "deaths": parseInt(data[15].data.substring(data[6].data.indexOf(": ") + 2).replace(/\s/g, "")),
+                        "numberOfTests": numOfTests,
+                        "confirmed": confirmed,
+                        "deaths": deaths,
                         "date": now
                     }
                 }, {upsert: true}).then(() => {
