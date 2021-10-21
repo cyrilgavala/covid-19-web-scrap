@@ -24,7 +24,7 @@ fetch(url).then((res) => res.text()).catch(console.error)
                 const now = new Date();
                 const numOfTests = parseInt(data[0].data.substring(data[0].data.indexOf(":") + 2).replace(/\s/g, ""))
                 const confirmed = parseInt(data[1].data.substring(data[1].data.indexOf(":") + 2).replace(/\s/g, ""))
-                const deaths = parseInt(data[15].data.substring(data[15].data.indexOf(":") + 2).replace(/\s/g, ""))
+                const deaths = parseInt(data[17].data.substring(data[17].data.indexOf(":") + 2).replace(/\s/g, ""))
                 now.setUTCHours(0, 0, 0, 0);
                 collection.findOneAndUpdate({"date": now}, {
                     $set: {
